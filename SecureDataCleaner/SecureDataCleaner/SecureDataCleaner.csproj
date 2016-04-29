@@ -40,15 +40,15 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CleanModes\NoSpaces.cs" />
-    <Compile Include="CleanModes\OnlyKeys.cs" />
     <Compile Include="CleanModes\SomeSeparators.cs" />
+    <Compile Include="DefaultCleaner.cs" />
     <Compile Include="Types\CleanResult.cs" />
     <Compile Include="HttpResultCleaner.cs" />
     <Compile Include="Interfaces\ICleaner.cs" />
     <Compile Include="Interfaces\ICleanMode.cs" />
     <Compile Include="Interfaces\IHttpResult.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Types\Data.cs" />
+    <Compile Include="Types\SecureData.cs" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using SecureDataCleaner.Types;
+﻿using SecureDataCleaner.Types;
 
 namespace SecureDataCleaner.Interfaces
 {

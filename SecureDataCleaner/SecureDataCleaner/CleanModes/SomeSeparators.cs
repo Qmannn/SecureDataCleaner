@@ -1,15 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
+using SecureDataCleaner.Interfaces;
 using SecureDataCleaner.Types;
 
 namespace SecureDataCleaner.CleanModes
 {
-    public class SomeSeparators
+    /// <summary>
+    /// Очистка любой строки по шаблону 
+    /// </summary>
+    public class SomeSeparators : ICleanMode
     {
         private readonly Regex _regexTemplate;
 
         private readonly List<string> _valueGroupNames = new List<string>();
+
 #region Public
 
         /// <summary>
@@ -52,7 +57,7 @@ namespace SecureDataCleaner.CleanModes
                 Group secureValue = matches[0].Groups[groupName];
                 secureString = secureString.Remove(secureValue.Index, secureValue.Length);
                 secureString = secureString.Insert(secureValue.Index, new String(Replacement, secureValue.Length));
-                cleanResult.SecureData.Add(new Data
+                cleanResult.SecureData.Add(new SecureData
                 {
                     Key = groupName,
                     Value = secureValue.Value

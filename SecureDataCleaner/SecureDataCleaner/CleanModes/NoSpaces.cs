@@ -6,6 +6,10 @@ using SecureDataCleaner.Types;
 
 namespace SecureDataCleaner.CleanModes
 {
+    /// <summary>
+    /// Очистка строки, не предусматривающей наличи символов \s (пробелов, табуляций и т.д.)
+    /// Очищенная строка не будет содержать символов \s, не зависимо от входной строки
+    /// </summary>
     public class NoSpaces : ICleanMode
     {
         private readonly Regex _regexTemplate;
@@ -52,7 +56,7 @@ namespace SecureDataCleaner.CleanModes
                 Group secureValue = matches[0].Groups[groupName];
                 cleanString = cleanString.Remove(secureValue.Index, secureValue.Length);
                 cleanString = cleanString.Insert(secureValue.Index, new String(Replacement, secureValue.Length));
-                cleanResult.SecureData.Add(new Data
+                cleanResult.SecureData.Add(new SecureData
                 {
                     Key = groupName,
                     Value = secureValue.Value
