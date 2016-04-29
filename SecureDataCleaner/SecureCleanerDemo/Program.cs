@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading;
 using System.Threading.Tasks;
 using SecureDataCleaner;
 using SecureDataCleaner.CleanModes;
@@ -25,40 +26,50 @@ namespace SecureCleanerDemo
         static void Main(string[] args)
         {
             HttpResultCleaner resCleaner = new HttpResultCleaner(new DefaultCleaner(
-                new NoSpaces("<auth><user>{templValue:user}</user><pass>{templValue:pass}</pass></auth>"), 
-                null, 
-                null)
+                new NoSpaces("http://test.com?user={templValue:user}&pass={templValue:pass}"),
+                new NoSpaces("<auth><user>{templValue:user}</user><pass>{templValue:pass}</pass></auth>"),
+                new SomeSeparators("<auth user='{templValue:user}' pass='{templValue:pass}'>"))
             {
                 DataSaver = Saver
             });
-            
-            AgodaHttpResult agodaHttpResult = new AgodaHttpResult
+            for (int j = 0; j < 20; j++)
             {
-                Url = "<auth><user>max</user><pass>123456</pass></auth>",
-                ResponseBody = "lol",
-                RequestBody = "Как бы не лохануться.. Чет запутался совсем."
-            };
-            var result = resCleaner.Clean(agodaHttpResult) as AgodaHttpResult;
+                new Thread(() =>
+                {
+                    for (int i = 1; i < 100; i++)
+                    {
+                        var rndStringUsr = Path.GetRandomFileName();
+                        var rndStringPass = Path.GetRandomFileName();
+                        AgodaHttpResult agodaHttpResult = new AgodaHttpResult
+                        {
+                            Url = "http://test.com?user=" + rndStringPass + "&pass=" + rndStringPass,
+                            RequestBody = "<auth><user>" + rndStringUsr + "</user><pass>" + rndStringPass + "</pass></auth>",
+                            ResponseBody = "<auth user='" + rndStringUsr + "' pass='" + rndStringPass + "'>"
+                        };
+                        agodaHttpResult = (AgodaHttpResult)resCleaner.Clean(agodaHttpResult);
+                    }
+                }).Start();
+            }
 
-            agodaHttpResult = new AgodaHttpResult
-            {
-                Url = "<auth><user>KJLSLHjh*+-asd0_+_{}</user><pass>qwertyСЛОЖНААА</pass></auth>",
-                ResponseBody = "lol",
-                RequestBody = "Как бы не лохануться.. Чет запутался совсем."
-            };
-            result = resCleaner.Clean(agodaHttpResult) as AgodaHttpResult;
-
-            Console.WriteLine("Url = {0}", result.Url);
-            Console.WriteLine("RequestBody = {0}", result.RequestBody);
-            Console.WriteLine("ResponseBody = {0}", result.ResponseBody);
-            Console.ReadKey();
         }
+
+        private static readonly object syncRoot = new object();
 
         static void Saver(List<SecureData> data)
         {
             foreach (var val in data)
             {
-                Console.WriteLine("key: {0}, val: {1}", val.Key, val.Value);
+                lock (syncRoot)
+                {
+                    Console.WriteLine("key: {0}, val: {1}", val.Key, val.Value);
+                    using (FileStream fs = new FileInfo("test.txt").OpenWrite())
+                    {
+                        using (StreamWriter sw = new StreamWriter(fs))
+                        {
+                            sw.WriteLine("Time for {0} cleans: {1} ms", val.Key, val.Value);
+                        }
+                    }   
+                }
             }
         }
 

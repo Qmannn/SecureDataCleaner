@@ -42,8 +42,8 @@ namespace SecureDataCleanerTests
         [TestMethod]
         public void NoSpacesThreadingTest()
         {
-            var noSpacesMode = new NoSpaces("{{key:user}:'{value:user}',{key:pass}:'{value:pass}'}");
-            for (int j = 0; j < 1000; j++)
+            var noSpacesMode = new NoSpaces("{{templKey:user}:'{templValue:user}',{templKey:pass}:'{templValue:pass}'}");
+            for (int j = 0; j < 100; j++)
             {
                 new Thread(() =>
                 {
@@ -103,12 +103,12 @@ namespace SecureDataCleanerTests
         [TestMethod]
         public void SomeSeparatorsThreadingTest()
         {
-            var noSpacesMode = new SomeSeparators("{{key:user}:'{value:user}',{key:pass}:'{value:pass}'}");
+            var noSpacesMode = new SomeSeparators("{{templKey:user}:'{templValue:user}',{templKey:pass}:'{templValue:pass}'}");
             for (int j = 0; j < 100; j++)
             {
                 new Thread(() =>
                 {
-                    for (int i = 1; i < 100000; i++)
+                    for (int i = 1; i < 1000000; i++)
                     {
                         var rndStringUsr = Path.GetRandomFileName();
                         var rndStringPass = Path.GetRandomFileName();
@@ -159,6 +159,7 @@ namespace SecureDataCleanerTests
         [TestMethod]
         public void NoSpacesPerformanceTest()
         {
+            NoSpacesTest();
             HttpResultCleaner agodaCleaner = new HttpResultCleaner(new DefaultCleaner(
                 new NoSpaces("<auth><user>{templValue:user}</user><pass>{templValue:pass}</pass></auth>"),
                 null,
