@@ -1,0 +1,10 @@
+c:\users\maks\documents\visual studio 2013\Projects\SecureDataCleaner\SecureDataCleaner\bin\Debug\SecureDataCleaner.dll
+c:\users\maks\documents\visual studio 2013\Projects\SecureDataCleaner\SecureDataCleaner\bin\Debug\SecureDataCleaner.pdb
+c:\users\maks\documents\visual studio 2013\Projects\SecureDataCleaner\SecureDataCleaner\obj\Debug\SecureDataCleaner.csprojResolveAssemblyReference.cache
+c:\users\maks\documents\visual studio 2013\Projects\SecureDataCleaner\SecureDataCleaner\obj\Debug\SecureDataCleaner.dll
+c:\users\maks\documents\visual studio 2013\Projects\SecureDataCleaner\SecureDataCleaner\obj\Debug\SecureDataCleaner.pdb
+C:\Users\MakS\Source\Repos\SecureDataCleaner\SecureDataCleaner\SecureDataCleaner\bin\Debug\SecureDataCleaner.dll
+C:\Users\MakS\Source\Repos\SecureDataCleaner\SecureDataCleaner\SecureDataCleaner\bin\Debug\SecureDataCleaner.pdb
+C:\Users\MakS\Source\Repos\SecureDataCleaner\SecureDataCleaner\SecureDataCleaner\obj\Debug\SecureDataCleaner.dll
+C:\Users\MakS\Source\Repos\SecureDataCleaner\SecureDataCleaner\SecureDataCleaner\obj\Debug\SecureDataCleaner.pdb
+C:\Users\MakS\Source\Repos\SecureDataCleaner\SecureDataCleaner\SecureDataCleaner\obj\Debug\SecureDataCleaner.csprojResolveAssemblyReference.cache
