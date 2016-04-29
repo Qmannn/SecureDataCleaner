@@ -1,2 +1,2 @@
 #SecureDataCleaner
-Очистка HTTP заголовков от secure-данных
+Очистка HTTP заголовков от secure-данных.
