@@ -31,42 +31,7 @@ namespace SecureDataCleaner.CleanModes
                 throw new ArgumentException("Template is not vald");
             }
         }
-
-        /// <summary>
-        /// Преобразование шаблона в регулярное выражение.
-        /// </summary>
-        /// <param name="template"></param>
-        /// <returns></returns>
-        private Regex TemplateToRegex(string template)
-        {
-            var cleanTemplate = template;
-
-            cleanTemplate = Regex.Replace(cleanTemplate, @"\s*", String.Empty);
-
-            var templateKeys = Regex.Matches(cleanTemplate, @"{templKey:([^}]*)}");
-            var templateValues = Regex.Matches(cleanTemplate, @"{templValue:([^}]*)}");
-
-
-            //экранирование управляющих символов в шаблоне
-            cleanTemplate = Regex.Escape(cleanTemplate);
-
-            //хранение имен ключевых полей вроде как бесполезно
-            //TODO возможно удалить!
-            foreach(Match templateKey in templateKeys)
-            {
-                cleanTemplate = cleanTemplate.Replace(Regex.Escape(templateKey.Groups[0].Value),
-                    String.Format("(?<key{0}>.*)", templateKey.Groups[1].Value));
-            }
-
-            foreach (Match templateValue in templateValues)
-            {
-                cleanTemplate = cleanTemplate.Replace(Regex.Escape(templateValue.Groups[0].Value),
-                    String.Format("(?<{0}>.*)",templateValue.Groups[1].Value));
-                _valueGroupNames.Add(String.Format("{0}", templateValue.Groups[1].Value));
-            }
-            return new Regex(cleanTemplate);
-        }
-
+        
         /// <summary>
         /// Очистка строки от secure-данных
         /// </summary>
@@ -95,6 +60,41 @@ namespace SecureDataCleaner.CleanModes
             }
             cleanResult.CleanString = cleanString;
             return cleanResult;
+        }
+
+        /// <summary>
+        /// Преобразование шаблона в регулярное выражение.
+        /// </summary>
+        /// <param name="template">Шаблон</param>
+        /// <returns>Регулярное выражение, соответствующее шаблону</returns>
+        private Regex TemplateToRegex(string template)
+        {
+            var cleanTemplate = template;
+
+            cleanTemplate = Regex.Replace(cleanTemplate, @"\s*", String.Empty);
+
+            var templateKeys = Regex.Matches(cleanTemplate, @"{templKey:([^}]*)}");
+            var templateValues = Regex.Matches(cleanTemplate, @"{templValue:([^}]*)}");
+
+
+            //экранирование управляющих символов в шаблоне
+            cleanTemplate = Regex.Escape(cleanTemplate);
+
+            //хранение имен ключевых полей вроде как бесполезно
+            //TODO возможно удалить!
+            foreach (Match templateKey in templateKeys)
+            {
+                cleanTemplate = cleanTemplate.Replace(Regex.Escape(templateKey.Groups[0].Value),
+                    String.Format("(?<key{0}>.*)", templateKey.Groups[1].Value));
+            }
+
+            foreach (Match templateValue in templateValues)
+            {
+                cleanTemplate = cleanTemplate.Replace(Regex.Escape(templateValue.Groups[0].Value),
+                    String.Format("(?<{0}>.*)", templateValue.Groups[1].Value));
+                _valueGroupNames.Add(String.Format("{0}", templateValue.Groups[1].Value));
+            }
+            return new Regex(cleanTemplate);
         }
     }
 }

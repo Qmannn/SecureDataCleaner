@@ -47,7 +47,7 @@ namespace SecureDataCleanerTests
             {
                 new Thread(() =>
                 {
-                    for (int i = 1; i < 100; i++)
+                    for (int i = 1; i < 10000; i++)
                     {
                         var rndStringUsr = Path.GetRandomFileName();
                         var rndStringPass = Path.GetRandomFileName();
@@ -65,7 +65,62 @@ namespace SecureDataCleanerTests
         [TestMethod]
         public void SomeSeparatorsTest()
         {
-            
+            var someSeparate = new SomeSeparators("{{templKey:user}:'{templValue:user}',{templKey:pass}:'{templValue:pass}'}");
+            for (int i = 1; i < 100000; i++)
+            {
+                var rndStringUsr = Path.GetRandomFileName();
+                var rndStringPass = Path.GetRandomFileName();
+                var cleanRes = someSeparate.CleanString("{user    :'" + rndStringUsr + "',   pass:'" + rndStringPass + "'}");
+                Assert.AreEqual(cleanRes.CleanString,
+                    "{user    :'" + new String(someSeparate.Replacement, rndStringUsr.Length) + "',   pass:'" +
+                    new String(someSeparate.Replacement, rndStringPass.Length) + "'}");
+                Assert.AreEqual(cleanRes.SecureData[0].Value, rndStringUsr);
+                Assert.AreEqual(cleanRes.SecureData[1].Value, rndStringPass);
+            }
+
+            someSeparate = new SomeSeparators("http://test.com/users/{templValue:user}/info");
+            for (int i = 1; i < 100; i++)
+            {
+                var rndStringUsr = Path.GetRandomFileName();
+                var cleanRes = someSeparate.CleanString("http://test.com/users/" + rndStringUsr + "/info");
+                Assert.AreEqual(cleanRes.CleanString,
+                    "http://test.com/users/" + new String(someSeparate.Replacement, rndStringUsr.Length) + "/info");
+                Assert.AreEqual(cleanRes.SecureData[0].Value, rndStringUsr);
+            }
+
+            someSeparate = new SomeSeparators("<auth><user>{templValue:user}</user><pass>{templValue:pass}</pass></auth>");
+            for (int i = 1; i < 100; i++)
+            {
+                var rndStringUsr = Path.GetRandomFileName();
+                var rndStringPass = Path.GetRandomFileName();
+                var cleanRes = someSeparate.CleanString("<auth><user>" + rndStringUsr + "</user><pass>" + rndStringPass +"</pass></auth>");
+                Assert.AreEqual(cleanRes.CleanString,
+                    "<auth><user>" + new String(someSeparate.Replacement, rndStringUsr.Length) + "</user><pass>" + new String(someSeparate.Replacement, rndStringUsr.Length) + "</pass></auth>");
+                Assert.AreEqual(cleanRes.SecureData[0].Value, rndStringUsr);
+            }
+        }
+
+        [TestMethod]
+        public void SomeSeparatorsThreadingTest()
+        {
+            var noSpacesMode = new SomeSeparators("{{key:user}:'{value:user}',{key:pass}:'{value:pass}'}");
+            for (int j = 0; j < 10000; j++)
+            {
+                new Thread(() =>
+                {
+                    for (int i = 1; i < 10000000; i++)
+                    {
+                        var rndStringUsr = Path.GetRandomFileName();
+                        var rndStringPass = Path.GetRandomFileName();
+                        var cleanRes = noSpacesMode.CleanString("{user:'" + rndStringUsr + "',pass:'" + rndStringPass + "'}");
+                        Assert.AreEqual(cleanRes.CleanString,
+                            "{user:'" + new String(noSpacesMode.Replacement, rndStringUsr.Length) + "',pass:'" +
+                            new String(noSpacesMode.Replacement, rndStringPass.Length) + "'}");
+                        Assert.AreEqual(cleanRes.SecureData[0].Value, rndStringUsr);
+                        Assert.AreEqual(cleanRes.SecureData[1].Value, rndStringPass);
+                    }
+                }).Start();
+            }
         }
     }
 }
