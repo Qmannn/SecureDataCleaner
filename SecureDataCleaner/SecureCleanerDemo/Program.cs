@@ -1,6 +1,7 @@
 ﻿using System;
 using System.CodeDom;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -13,8 +14,11 @@ namespace SecureCleanerDemo
     {
         static void Main(string[] args)
         {
-            var lalka = new SomeSeparators("{user:   {value     :    ”{templValue:user}”},     pass:{value:”123456”}}");
-
+            var lalka = new SomeSeparators("{{templKey:user}:'{templValue:user}',{templKey:pass}:[]'{templValue:pass}'}");
+            var rndStringUsr = Path.GetRandomFileName();
+            var rndStringPass = Path.GetRandomFileName();
+            var cleanRes = lalka.Check("{user    :'" + rndStringUsr + "',   pass:[]'" + rndStringPass + "'  }");
+            lalka.Check("{user:   {value     :    ”max”},     pass:{value:”123456”}}");
 
             var cleanTemplate = "{user:   {value     :    ”   max   ”},     pass:{value:”123456”}}";
             cleanTemplate = Regex.Replace(cleanTemplate, @"(\w+|\s+)|(\W)", "\\s+$1$2\\s+");

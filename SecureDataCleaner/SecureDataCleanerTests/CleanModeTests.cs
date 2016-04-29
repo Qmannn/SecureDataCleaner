@@ -61,5 +61,11 @@ namespace SecureDataCleanerTests
                 }).Start();
             }
         }
+
+        [TestMethod]
+        public void SomeSeparatorsTest()
+        {
+            
+        }
     }
 }

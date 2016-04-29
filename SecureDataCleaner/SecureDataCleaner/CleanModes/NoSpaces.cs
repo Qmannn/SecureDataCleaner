@@ -46,26 +46,25 @@ namespace SecureDataCleaner.CleanModes
             var templateKeys = Regex.Matches(cleanTemplate, @"{templKey:([^}]*)}");
             var templateValues = Regex.Matches(cleanTemplate, @"{templValue:([^}]*)}");
 
-            string regexString = cleanTemplate;
 
             //экранирование управляющих символов в шаблоне
-            regexString = Regex.Replace(regexString, @"[\-\[\]\(\)\*\+\?\.,\\\^|#]", @"\$&");
-            
+            cleanTemplate = Regex.Escape(cleanTemplate);
+
             //хранение имен ключевых полей вроде как бесполезно
             //TODO возможно удалить!
             foreach(Match templateKey in templateKeys)
             {
-                regexString = regexString.Replace(templateKey.Groups[0].Value,
+                cleanTemplate = cleanTemplate.Replace(Regex.Escape(templateKey.Groups[0].Value),
                     String.Format("(?<key{0}>.*)", templateKey.Groups[1].Value));
             }
 
             foreach (Match templateValue in templateValues)
             {
-                regexString = regexString.Replace(templateValue.Groups[0].Value,
+                cleanTemplate = cleanTemplate.Replace(Regex.Escape(templateValue.Groups[0].Value),
                     String.Format("(?<{0}>.*)",templateValue.Groups[1].Value));
                 _valueGroupNames.Add(String.Format("{0}", templateValue.Groups[1].Value));
             }
-            return new Regex(regexString);
+            return new Regex(cleanTemplate);
         }
 
         /// <summary>
