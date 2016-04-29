@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Diagnostics;
 using System.IO;
-using System.Security.Cryptography.X509Certificates;
-using System.Text;
 using System.Threading;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using SecureDataCleaner;
 using SecureDataCleaner.CleanModes;
+using SecureDataCleaner.Interfaces;
 
 namespace SecureDataCleanerTests
 {
@@ -104,11 +104,11 @@ namespace SecureDataCleanerTests
         public void SomeSeparatorsThreadingTest()
         {
             var noSpacesMode = new SomeSeparators("{{key:user}:'{value:user}',{key:pass}:'{value:pass}'}");
-            for (int j = 0; j < 10000; j++)
+            for (int j = 0; j < 100; j++)
             {
                 new Thread(() =>
                 {
-                    for (int i = 1; i < 10000000; i++)
+                    for (int i = 1; i < 100000; i++)
                     {
                         var rndStringUsr = Path.GetRandomFileName();
                         var rndStringPass = Path.GetRandomFileName();
@@ -121,6 +121,80 @@ namespace SecureDataCleanerTests
                     }
                 }).Start();
             }
+        }
+
+        [TestMethod]
+        public void SomeSeparatorsPerformanceTest()
+        {
+            HttpResultCleaner agodaCleaner = new HttpResultCleaner(new DefaultCleaner(
+                new SomeSeparators("<auth><user>{templValue:user}</user><pass>{templValue:pass}</pass></auth>"), 
+                null,
+                null));
+            int clearCount = 1000000;
+            var timer = Stopwatch.StartNew();
+            for (int i = 1; i < clearCount; i++)
+            {
+                var rndStringUsr = Path.GetRandomFileName();
+                var rndStringPass = Path.GetRandomFileName();
+                AgodaHttpResult agodaHttpResult = new AgodaHttpResult
+                {
+                    Url = "<auth><user>" + rndStringUsr + "</user><pass>" + rndStringPass + "</pass></auth>",
+                    RequestBody = rndStringUsr,
+                    ResponseBody = rndStringPass
+                };
+                agodaHttpResult = (AgodaHttpResult) agodaCleaner.Clean(agodaHttpResult);
+                Assert.AreEqual(agodaHttpResult.Url, "<auth><user>" + new String('X', rndStringUsr.Length) + "</user><pass>" + new String('X', rndStringUsr.Length) + "</pass></auth>");
+            }
+            timer.Stop();
+            using (FileStream fs = new FileInfo("SomeSeparatorsPerformanceTestResult.txt").OpenWrite())
+            {
+                using (StreamWriter sw = new StreamWriter(fs))
+                {
+                    sw.WriteLine("Time for {0} cleans: {1} ms", clearCount, timer.Elapsed.TotalMilliseconds);
+                }
+            }
+            
+        }
+
+        [TestMethod]
+        public void NoSpacesPerformanceTest()
+        {
+            HttpResultCleaner agodaCleaner = new HttpResultCleaner(new DefaultCleaner(
+                new NoSpaces("<auth><user>{templValue:user}</user><pass>{templValue:pass}</pass></auth>"),
+                null,
+                null));
+            int clearCount = 1000000;
+            var timer = Stopwatch.StartNew();
+            for (int i = 1; i < clearCount; i++)
+            {
+                var rndStringUsr = Path.GetRandomFileName();
+                var rndStringPass = Path.GetRandomFileName();
+                AgodaHttpResult agodaHttpResult = new AgodaHttpResult
+                {
+                    Url = "<auth><user>" + rndStringUsr + "</user><pass>" + rndStringPass + "</pass></auth>",
+                    RequestBody = rndStringUsr,
+                    ResponseBody = rndStringPass
+                };
+                agodaHttpResult = (AgodaHttpResult) agodaCleaner.Clean(agodaHttpResult);
+                Assert.AreEqual(agodaHttpResult.Url, "<auth><user>" + new String('X', rndStringUsr.Length) + "</user><pass>" + new String('X', rndStringUsr.Length) + "</pass></auth>");
+            }
+            timer.Stop();
+            using (FileStream fs = new FileInfo("NoSpacesPerformanceTestResult.txt").OpenWrite())
+            {
+                using (StreamWriter sw = new StreamWriter(fs))
+                {
+                    sw.WriteLine("Time for {0} cleans: {1} ms", clearCount, timer.Elapsed.TotalMilliseconds);
+                }
+            }
+
+        }
+
+
+        class AgodaHttpResult : IHttpResult
+        {
+            public string Url { get; set; }
+            public string RequestBody { get; set; }
+            public string ResponseBody { get; set; }
         }
     }
 }

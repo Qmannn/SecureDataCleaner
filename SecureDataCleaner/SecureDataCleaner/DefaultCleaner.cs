@@ -29,34 +29,43 @@ namespace SecureDataCleaner
 
         public string CleanUrl(string secureUrl)
         {
-            CleanResult cleanResult = _urlCleanMode?.CleanString(secureUrl);
+            CleanResult cleanResult = _urlCleanMode == null ? null : _urlCleanMode.CleanString(secureUrl);
             if (cleanResult == null)
             {
                 return secureUrl;
             }
-            DataSaver?.Invoke(cleanResult.SecureData);
+            if (DataSaver != null)
+            {
+                DataSaver.Invoke(cleanResult.SecureData);
+            }
             return cleanResult.CleanString;
         }
 
         public string CleanReqBody(string secureReqBody)
         {
-            CleanResult cleanResult = _requestCleanMode?.CleanString(secureReqBody);
+            CleanResult cleanResult = _requestCleanMode == null ? null : _requestCleanMode.CleanString(secureReqBody);
             if (cleanResult == null)
             {
                 return secureReqBody;
             }
-            DataSaver?.Invoke(cleanResult.SecureData);
+            if (DataSaver != null)
+            {
+                DataSaver.Invoke(cleanResult.SecureData);
+            }
             return cleanResult.CleanString;
         }
 
         public string CleanResBody(string secureResBody)
         {
-            CleanResult cleanResult = _responseCleanMode?.CleanString(secureResBody);
+            CleanResult cleanResult = _responseCleanMode == null ? null : _responseCleanMode.CleanString(secureResBody);
             if (cleanResult == null)
             {
                 return secureResBody;
             }
-            DataSaver?.Invoke(cleanResult.SecureData);
+            if (DataSaver != null)
+            {
+                DataSaver.Invoke(cleanResult.SecureData);
+            }
             return cleanResult.CleanString;
         }
     }
