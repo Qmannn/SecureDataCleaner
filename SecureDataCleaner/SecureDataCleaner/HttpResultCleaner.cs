@@ -6,7 +6,7 @@ namespace SecureDataCleaner
     {
         private readonly ICleaner _cleaner;
 
-        public IHttpResult Clean(IHttpResult secureHttpResult)
+        protected IHttpResult Clean(IHttpResult secureHttpResult)
         {
             secureHttpResult.Url = _cleaner.CleanUrl(secureHttpResult.Url);
             secureHttpResult.RequestBody = _cleaner.CleanReqBody(secureHttpResult.RequestBody);
