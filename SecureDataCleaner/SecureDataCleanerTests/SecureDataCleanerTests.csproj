@@ -52,6 +52,7 @@
   <ItemGroup>
     <Compile Include="CleanModeTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="HttpResultCleanerTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\SecureDataCleaner\SecureDataCleaner.csproj">

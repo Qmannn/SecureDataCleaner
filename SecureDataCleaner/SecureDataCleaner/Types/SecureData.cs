@@ -1,6 +1,6 @@
 ﻿namespace SecureDataCleaner.Types
 {
-    public class Data
+    public class SecureData
     {
         public string Key { get; set; }
 

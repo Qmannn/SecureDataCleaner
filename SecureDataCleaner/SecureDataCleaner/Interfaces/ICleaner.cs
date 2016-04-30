@@ -1,5 +1,9 @@
 ﻿namespace SecureDataCleaner.Interfaces
 {
+    /// <summary>
+    /// Логика очистки для IHttpresult
+    /// При необходимости secure-данные сохранять в имплементации
+    /// </summary>
     public interface ICleaner
     {
         /// <summary>

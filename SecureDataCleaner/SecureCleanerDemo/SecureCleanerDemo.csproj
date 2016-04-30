@@ -41,6 +41,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="HttpResultCleaners\AgodaHttpResultCleaner.cs" />
+    <Compile Include="HttpResultCleaners\BookingcomHttpResultCleaner.cs" />
+    <Compile Include="HttpResultCleaners\ExpediaHttpResultCleaner.cs" />
+    <Compile Include="HttpResultCleaners\OstrovokHttpResultCleaner.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

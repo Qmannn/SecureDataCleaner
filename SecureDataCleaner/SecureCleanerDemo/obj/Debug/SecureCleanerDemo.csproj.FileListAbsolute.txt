@@ -1,16 +1,8 @@
-C:\Users\MakS\documents\visual studio 2013\Projects\SecureDataCleaner\SecureCleanerDemo\bin\Debug\SecureCleanerDemo.exe.config
-C:\Users\MakS\documents\visual studio 2013\Projects\SecureDataCleaner\SecureCleanerDemo\obj\Debug\SecureCleanerDemo.csprojResolveAssemblyReference.cache
-C:\Users\MakS\documents\visual studio 2013\Projects\SecureDataCleaner\SecureCleanerDemo\bin\Debug\SecureCleanerDemo.exe
-C:\Users\MakS\documents\visual studio 2013\Projects\SecureDataCleaner\SecureCleanerDemo\bin\Debug\SecureCleanerDemo.pdb
-C:\Users\MakS\documents\visual studio 2013\Projects\SecureDataCleaner\SecureCleanerDemo\bin\Debug\SecureDataCleaner.dll
-C:\Users\MakS\documents\visual studio 2013\Projects\SecureDataCleaner\SecureCleanerDemo\bin\Debug\SecureDataCleaner.pdb
-C:\Users\MakS\documents\visual studio 2013\Projects\SecureDataCleaner\SecureCleanerDemo\obj\Debug\SecureCleanerDemo.exe
-C:\Users\MakS\documents\visual studio 2013\Projects\SecureDataCleaner\SecureCleanerDemo\obj\Debug\SecureCleanerDemo.pdb
 C:\Users\MakS\Source\Repos\SecureDataCleaner\SecureDataCleaner\SecureCleanerDemo\bin\Debug\SecureCleanerDemo.exe.config
-C:\Users\MakS\Source\Repos\SecureDataCleaner\SecureDataCleaner\SecureCleanerDemo\obj\Debug\SecureCleanerDemo.exe
-C:\Users\MakS\Source\Repos\SecureDataCleaner\SecureDataCleaner\SecureCleanerDemo\obj\Debug\SecureCleanerDemo.pdb
 C:\Users\MakS\Source\Repos\SecureDataCleaner\SecureDataCleaner\SecureCleanerDemo\bin\Debug\SecureCleanerDemo.exe
 C:\Users\MakS\Source\Repos\SecureDataCleaner\SecureDataCleaner\SecureCleanerDemo\bin\Debug\SecureCleanerDemo.pdb
 C:\Users\MakS\Source\Repos\SecureDataCleaner\SecureDataCleaner\SecureCleanerDemo\bin\Debug\SecureDataCleaner.dll
 C:\Users\MakS\Source\Repos\SecureDataCleaner\SecureDataCleaner\SecureCleanerDemo\bin\Debug\SecureDataCleaner.pdb
 C:\Users\MakS\Source\Repos\SecureDataCleaner\SecureDataCleaner\SecureCleanerDemo\obj\Debug\SecureCleanerDemo.csprojResolveAssemblyReference.cache
+C:\Users\MakS\Source\Repos\SecureDataCleaner\SecureDataCleaner\SecureCleanerDemo\obj\Debug\SecureCleanerDemo.exe
+C:\Users\MakS\Source\Repos\SecureDataCleaner\SecureDataCleaner\SecureCleanerDemo\obj\Debug\SecureCleanerDemo.pdb

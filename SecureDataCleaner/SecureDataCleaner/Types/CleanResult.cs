@@ -6,12 +6,12 @@ namespace SecureDataCleaner.Types
     {
         public string CleanString { get; set; }
 
-        public List<Data> SecureData { get; private set; }
+        public List<SecureData> SecureData { get; private set; }
 
 
         public CleanResult()
         {
-            SecureData = new List<Data>();
+            SecureData = new List<SecureData>();
         }
     }
 }
