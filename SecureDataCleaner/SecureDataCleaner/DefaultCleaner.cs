@@ -13,7 +13,7 @@ namespace SecureDataCleaner
         /// <summary>
         /// Делегат сохранения полученный secure-данных
         /// </summary>
-        public delegate void SaveSecureData(List<SecureData> secureData);
+        public delegate void SaveSecureData(CleanResult secureData);
         
         /// <summary>
         /// Метод сохранения полученных secure-данных
@@ -43,7 +43,7 @@ namespace SecureDataCleaner
             }
             if (DataSaver != null)
             {
-                DataSaver.Invoke(cleanResult.SecureData);
+                DataSaver.Invoke(cleanResult);
             }
             return cleanResult.CleanString;
         }
@@ -57,7 +57,7 @@ namespace SecureDataCleaner
             }
             if (DataSaver != null)
             {
-                DataSaver.Invoke(cleanResult.SecureData);
+                DataSaver.Invoke(cleanResult);
             }
             return cleanResult.CleanString;
         }
@@ -71,7 +71,7 @@ namespace SecureDataCleaner
             }
             if (DataSaver != null)
             {
-                DataSaver.Invoke(cleanResult.SecureData);
+                DataSaver.Invoke(cleanResult);
             }
             return cleanResult.CleanString;
         }

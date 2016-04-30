@@ -1,83 +1,107 @@
 ﻿using System;
-using System.CodeDom;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Threading;
-using System.Threading.Tasks;
-using SecureDataCleaner;
-using SecureDataCleaner.CleanModes;
+using System.Resources;
+using System.Runtime.ConstrainedExecution;
+using SecureCleanerDemo.HttpResultCleaners;
 using SecureDataCleaner.Interfaces;
-using SecureDataCleaner.Types;
 
 namespace SecureCleanerDemo
 {
-    class AgodaHttpResult : IHttpResult
-    {
-        public string Url { get; set; }
-        public string RequestBody { get; set; }
-        public string ResponseBody { get; set; }
-    }
-
     class Program
     {
+        /// <summary>
+        /// Простая демонстрация работы библиотеки
+        /// </summary>
+        /// <param name="args"></param>
         static void Main(string[] args)
         {
-            VkHttpRequestCleaner vkCleaner = new VkHttpRequestCleaner();
-            VkHttpResult vkResult = new VkHttpResult();
-            vkCleaner.Clean(vkResult);
-
-
-            HttpResultCleaner resCleaner = new HttpResultCleaner(new DefaultCleaner(
-                new NoSpaces("http://test.com?user={templValue:user}&pass={templValue:pass}"),
-                new NoSpaces("<auth><user>{templValue:user}</user><pass>{templValue:pass}</pass></auth>"),
-                new SomeSeparators("<auth user='{templValue:user}' pass='{templValue:pass}'>"))
+            BookingcomHttpResultCleaner bookingcomHttpResultCleaner = new BookingcomHttpResultCleaner();
+            var bookingcomHttpResult = new BookingcomHttpResult
             {
-                DataSaver = Saver
-            });
-            for (int j = 0; j < 20; j++)
-            {
-                new Thread(() =>
-                {
-                    for (int i = 1; i < 100; i++)
-                    {
-                        var rndStringUsr = Path.GetRandomFileName();
-                        var rndStringPass = Path.GetRandomFileName();
-                        AgodaHttpResult agodaHttpResult = new AgodaHttpResult
-                        {
-                            Url = "http://test.com?user=" + rndStringPass + "&pass=" + rndStringPass,
-                            RequestBody = "<auth><user>" + rndStringUsr + "</user><pass>" + rndStringPass + "</pass></auth>",
-                            ResponseBody = "<auth user='" + rndStringUsr + "' pass='" + rndStringPass + "'>"
-                        };
-                        agodaHttpResult = (AgodaHttpResult)resCleaner.Clean(agodaHttpResult);
-                    }
-                }).Start();
-            }
+                Url = "http://test.com?user=max&pass=123456",
+                RequestBody = "<auth><user>max</user><pass>123456</pass></auth>",
+                ResponseBody = "<auth user='max' pass='123456'>"
+            };
 
+            Console.WriteLine("BookingcomHttpResult");
+            Console.WriteLine("FROM");
+            PrintHttpResult(bookingcomHttpResult);
+            bookingcomHttpResult = bookingcomHttpResultCleaner.Clean(bookingcomHttpResult);
+            Console.WriteLine("TO");
+            PrintHttpResult(bookingcomHttpResult);
+
+            OstrovokHttpResultCleaner ostrovokHttpResultCleaner = new OstrovokHttpResultCleaner();
+            var ostrovokHttpResult = new OstrovokHttpResult
+            {
+                Url = "http://test.com/users/max/info",
+                RequestBody = "{user:'max',pass:'123456'}",
+                ResponseBody = "{user:{value:'max'},pass:{value:'123456'}}"
+            };
+
+            Console.WriteLine("OstrovokHttpResult");
+            Console.WriteLine("FROM");
+            PrintHttpResult(ostrovokHttpResult);
+            ostrovokHttpResult = ostrovokHttpResultCleaner.Clean(ostrovokHttpResult);
+            Console.WriteLine("TO");
+            PrintHttpResult(ostrovokHttpResult);
+
+            AgodaHttpResultCleaner agodaHttpResultCleaner = new AgodaHttpResultCleaner();
+            var agodaHttpResult = new AgodaHttpResult
+            {
+                Url = "http://test.com?user=max&pass=123456",
+                RequestBody = @"
+<auth>
+    <user>max</user>
+    <pass>123456</pass>
+</auth>",
+                ResponseBody = "<auth user='max' pass='123456'>"
+            };
+
+            Console.WriteLine("AgodaHttpResult");
+            Console.WriteLine("FROM");
+            PrintHttpResult(agodaHttpResult);
+            agodaHttpResult = agodaHttpResultCleaner.Clean(agodaHttpResult);
+            Console.WriteLine("TO");
+            PrintHttpResult(agodaHttpResult);
+
+            ExpediaHttpResultCleaner expediaHttpResultCleaner = new ExpediaHttpResultCleaner();
+
+            var expediaHttpResult = new ExpediaHttpResult
+            {
+                Url = "http://test.com/users/max/info",
+                RequestBody = @"
+{
+       user : 'max',
+       pass : '123456'
+}
+",
+                ResponseBody = @"
+{
+       user : {
+             value : 'max'
+       },
+       pass : {
+             value : '123456'
+       }
+}
+"
+            };  
+
+            Console.WriteLine("AgodaHttpResult");
+            Console.WriteLine("FROM");
+            PrintHttpResult(expediaHttpResult);
+            expediaHttpResult = expediaHttpResultCleaner.Clean(expediaHttpResult);
+            Console.WriteLine("TO");
+            PrintHttpResult(expediaHttpResult);
+
+            
         }
 
-        private static readonly object syncRoot = new object();
-
-        static void Saver(List<SecureData> data)
+        static void PrintHttpResult(IHttpResult result)
         {
-            foreach (var val in data)
-            {
-                lock (syncRoot)
-                {
-                    Console.WriteLine("key: {0}, val: {1}", val.Key, val.Value);
-                    using (FileStream fs = new FileInfo("test.txt").OpenWrite())
-                    {
-                        using (StreamWriter sw = new StreamWriter(fs))
-                        {
-                            sw.WriteLine("Time for {0} cleans: {1} ms", val.Key, val.Value);
-                        }
-                    }   
-                }
-            }
+            Console.WriteLine(result.Url);
+            Console.WriteLine(result.RequestBody);
+            Console.WriteLine(result.ResponseBody);
+            Console.WriteLine();
         }
-
-        
     }
 }

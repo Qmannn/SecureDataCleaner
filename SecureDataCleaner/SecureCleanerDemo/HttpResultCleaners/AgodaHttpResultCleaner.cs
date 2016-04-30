@@ -6,14 +6,14 @@ using SecureDataCleaner.Types;
 
 namespace SecureCleanerDemo.HttpResultCleaners
 {
-    public class BookingcomHttpResult : IHttpResult
+    public class AgodaHttpResult : IHttpResult
     {
         public string Url { get; set; }
         public string RequestBody { get; set; }
         public string ResponseBody { get; set; }
         public IHttpResult Copy()
         {
-            return new BookingcomHttpResult()
+            return new AgodaHttpResult()
             {
                 Url = Url,
                 RequestBody = RequestBody,
@@ -22,13 +22,13 @@ namespace SecureCleanerDemo.HttpResultCleaners
         }
     }
 
-    public class BookingcomHttpResultCleaner : HttpResultCleaner
+    public class AgodaHttpResultCleaner : HttpResultCleaner
     {
         private static readonly object SyncFileAccessObject = new object();
         public static string ResultFileName { get; set; }
 
         /// <summary>
-        /// Шаблон обработки полей BookingcomHttpResult's
+        /// Шаблон обработки полей AgodaHttpResult's
         /// </summary>
         private static readonly ICleaner BookingcomCleaner = new DefaultCleaner(
             new NoSpaces("http://test.com?user={templValue:user}&pass={templValue:pass}"),
@@ -41,10 +41,10 @@ namespace SecureCleanerDemo.HttpResultCleaners
         /// <summary>
         /// Инициализация объекта
         /// </summary>
-        public BookingcomHttpResultCleaner()
+        public AgodaHttpResultCleaner()
             : base(BookingcomCleaner)
         {
-            ResultFileName = "BookingcomResultFile.txt"; // on default file name
+            ResultFileName = "AgodaResultFile.txt"; // on default file name
         }
 
         /// <summary>
@@ -52,9 +52,9 @@ namespace SecureCleanerDemo.HttpResultCleaners
         /// </summary>
         /// <param name="bookingcomResult">Очищаемый обхект</param>
         /// <returns>Очищенный объект</returns>
-        public BookingcomHttpResult Clean(BookingcomHttpResult bookingcomResult)
+        public AgodaHttpResult Clean(AgodaHttpResult bookingcomResult)
         {
-            return (BookingcomHttpResult)base.Clean(bookingcomResult);
+            return (AgodaHttpResult)base.Clean(bookingcomResult);
         }
 
         private static void SecureDataSaver(CleanResult result)

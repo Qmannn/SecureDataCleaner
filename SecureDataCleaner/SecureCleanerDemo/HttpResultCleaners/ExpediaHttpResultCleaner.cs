@@ -6,14 +6,14 @@ using SecureDataCleaner.Types;
 
 namespace SecureCleanerDemo.HttpResultCleaners
 {
-    public class BookingcomHttpResult : IHttpResult
+    public class ExpediaHttpResult : IHttpResult
     {
         public string Url { get; set; }
         public string RequestBody { get; set; }
         public string ResponseBody { get; set; }
         public IHttpResult Copy()
         {
-            return new BookingcomHttpResult()
+            return new ExpediaHttpResult()
             {
                 Url = Url,
                 RequestBody = RequestBody,
@@ -22,18 +22,18 @@ namespace SecureCleanerDemo.HttpResultCleaners
         }
     }
 
-    public class BookingcomHttpResultCleaner : HttpResultCleaner
+    public class ExpediaHttpResultCleaner : HttpResultCleaner
     {
         private static readonly object SyncFileAccessObject = new object();
         public static string ResultFileName { get; set; }
 
         /// <summary>
-        /// Шаблон обработки полей BookingcomHttpResult's
+        /// Шаблон обработки полей ExpediaHttpResult's
         /// </summary>
         private static readonly ICleaner BookingcomCleaner = new DefaultCleaner(
-            new NoSpaces("http://test.com?user={templValue:user}&pass={templValue:pass}"),
-            new SomeSeparators("<auth><user>{templValue:user}</user><pass>{templValue:pass}</pass></auth>"),
-            new SomeSeparators("<auth user='{templValue:user}' pass='{templValue:pass}'>"))
+            new NoSpaces("http://test.com/users/{templValue:user}/info"),
+            new SomeSeparators(@"{user : '{templValue:user}',pass : '{templValue:pass}'}"),
+            new SomeSeparators(@"{user : {value : '{templValue:user}'},pass : {value : '{templValue:pass}'}}"))
         {
             DataSaver = SecureDataSaver
         };
@@ -41,10 +41,10 @@ namespace SecureCleanerDemo.HttpResultCleaners
         /// <summary>
         /// Инициализация объекта
         /// </summary>
-        public BookingcomHttpResultCleaner()
+        public ExpediaHttpResultCleaner()
             : base(BookingcomCleaner)
         {
-            ResultFileName = "BookingcomResultFile.txt"; // on default file name
+            ResultFileName = "ExpediaResultFile.txt"; // on default file name
         }
 
         /// <summary>
@@ -52,9 +52,9 @@ namespace SecureCleanerDemo.HttpResultCleaners
         /// </summary>
         /// <param name="bookingcomResult">Очищаемый обхект</param>
         /// <returns>Очищенный объект</returns>
-        public BookingcomHttpResult Clean(BookingcomHttpResult bookingcomResult)
+        public ExpediaHttpResult Clean(ExpediaHttpResult bookingcomResult)
         {
-            return (BookingcomHttpResult)base.Clean(bookingcomResult);
+            return (ExpediaHttpResult)base.Clean(bookingcomResult);
         }
 
         private static void SecureDataSaver(CleanResult result)

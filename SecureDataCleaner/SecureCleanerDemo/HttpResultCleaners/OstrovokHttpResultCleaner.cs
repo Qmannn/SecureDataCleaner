@@ -6,14 +6,14 @@ using SecureDataCleaner.Types;
 
 namespace SecureCleanerDemo.HttpResultCleaners
 {
-    public class BookingcomHttpResult : IHttpResult
+    public class OstrovokHttpResult : IHttpResult
     {
         public string Url { get; set; }
         public string RequestBody { get; set; }
         public string ResponseBody { get; set; }
         public IHttpResult Copy()
         {
-            return new BookingcomHttpResult()
+            return new OstrovokHttpResult()
             {
                 Url = Url,
                 RequestBody = RequestBody,
@@ -22,7 +22,7 @@ namespace SecureCleanerDemo.HttpResultCleaners
         }
     }
 
-    public class BookingcomHttpResultCleaner : HttpResultCleaner
+    public class OstrovokHttpResultCleaner : HttpResultCleaner
     {
         private static readonly object SyncFileAccessObject = new object();
         public static string ResultFileName { get; set; }
@@ -30,10 +30,10 @@ namespace SecureCleanerDemo.HttpResultCleaners
         /// <summary>
         /// Шаблон обработки полей BookingcomHttpResult's
         /// </summary>
-        private static readonly ICleaner BookingcomCleaner = new DefaultCleaner(
-            new NoSpaces("http://test.com?user={templValue:user}&pass={templValue:pass}"),
-            new SomeSeparators("<auth><user>{templValue:user}</user><pass>{templValue:pass}</pass></auth>"),
-            new SomeSeparators("<auth user='{templValue:user}' pass='{templValue:pass}'>"))
+        private static readonly ICleaner OstrovokCleaner = new DefaultCleaner(
+            new NoSpaces("http://test.com/users/{templValue:user}/info"),
+            new SomeSeparators("{user:'{templValue:user}',pass:'{templValue:pass}'}"),
+            new SomeSeparators("{user:{value:'{templValue:user}'},pass:{value:'{templValue:pass}'}}"))
         {
             DataSaver = SecureDataSaver
         };
@@ -41,10 +41,10 @@ namespace SecureCleanerDemo.HttpResultCleaners
         /// <summary>
         /// Инициализация объекта
         /// </summary>
-        public BookingcomHttpResultCleaner()
-            : base(BookingcomCleaner)
+        public OstrovokHttpResultCleaner()
+            : base(OstrovokCleaner)
         {
-            ResultFileName = "BookingcomResultFile.txt"; // on default file name
+            ResultFileName = "OstrovokResultFile.txt"; // on default file name
         }
 
         /// <summary>
@@ -52,9 +52,9 @@ namespace SecureCleanerDemo.HttpResultCleaners
         /// </summary>
         /// <param name="bookingcomResult">Очищаемый обхект</param>
         /// <returns>Очищенный объект</returns>
-        public BookingcomHttpResult Clean(BookingcomHttpResult bookingcomResult)
+        public OstrovokHttpResult Clean(OstrovokHttpResult bookingcomResult)
         {
-            return (BookingcomHttpResult)base.Clean(bookingcomResult);
+            return (OstrovokHttpResult)base.Clean(bookingcomResult);
         }
 
         private static void SecureDataSaver(CleanResult result)
