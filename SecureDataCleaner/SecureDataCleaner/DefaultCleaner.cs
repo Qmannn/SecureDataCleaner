@@ -20,6 +20,13 @@ namespace SecureDataCleaner
         /// </summary>
         public SaveSecureData DataSaver { get; set; }
 
+        /// <summary>
+        /// Инициализация объекта-cleaner'a. 
+        /// null для параметра -  не очищать соответствующую строку
+        /// </summary>
+        /// <param name="urlCleanMode">Режим чистки URL</param>
+        /// <param name="requestCleanMode">Режим чистки request</param>
+        /// <param name="responseCleanMode">Режим чистки response</param>
         public DefaultCleaner(ICleanMode urlCleanMode, ICleanMode requestCleanMode, ICleanMode responseCleanMode)
         {
             _urlCleanMode = urlCleanMode;

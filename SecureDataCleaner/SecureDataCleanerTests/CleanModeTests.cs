@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Threading;
@@ -43,23 +44,45 @@ namespace SecureDataCleanerTests
         public void NoSpacesThreadingTest()
         {
             var noSpacesMode = new NoSpaces("{{templKey:user}:'{templValue:user}',{templKey:pass}:'{templValue:pass}'}");
-            for (int j = 0; j < 100; j++)
+            var threaadList = new List<Thread>();
+            bool someThreadHasError = false;
+            for (int j = 0; j < 50; j++)
             {
-                new Thread(() =>
+                var thread = new Thread(() =>
                 {
-                    for (int i = 1; i < 10000; i++)
+                    for (int i = 1; i < 10000 && !someThreadHasError; i++)
                     {
                         var rndStringUsr = Path.GetRandomFileName();
                         var rndStringPass = Path.GetRandomFileName();
                         var cleanRes = noSpacesMode.CleanString("{user:'" + rndStringUsr + "',pass:'" + rndStringPass + "'}");
-                        Assert.AreEqual(cleanRes.CleanString,
+                        someThreadHasError = cleanRes.CleanString !=
                             "{user:'" + new String(noSpacesMode.Replacement, rndStringUsr.Length) + "',pass:'" +
-                            new String(noSpacesMode.Replacement, rndStringPass.Length) + "'}");
-                        Assert.AreEqual(cleanRes.SecureData[0].Value, rndStringUsr);
-                        Assert.AreEqual(cleanRes.SecureData[1].Value, rndStringPass);
+                            new String(noSpacesMode.Replacement, rndStringPass.Length) + "'}" && !someThreadHasError;
+                        someThreadHasError = cleanRes.SecureData[0].Value != rndStringUsr && !someThreadHasError;
+                        someThreadHasError = cleanRes.SecureData[1].Value != rndStringPass && !someThreadHasError;
                     }
-                }).Start();
+                    lock (threaadList)
+                    {
+                        threaadList.Remove(Thread.CurrentThread);
+                    }
+                });
+                lock (threaadList)
+                {
+                    threaadList.Add(thread);
+                }
+                thread.Start();
             }
+            int threadCount = threaadList.Count;
+            while (threadCount != 0)
+            {
+                Thread.Sleep(1000);
+                lock (threaadList)
+                {
+                    threadCount = threaadList.Count;
+                }
+            }
+            Assert.AreEqual(threadCount, 0);
+            Assert.AreEqual(someThreadHasError, false);
         }
 
         [TestMethod]
@@ -103,24 +126,46 @@ namespace SecureDataCleanerTests
         [TestMethod]
         public void SomeSeparatorsThreadingTest()
         {
-            var noSpacesMode = new SomeSeparators("{{templKey:user}:'{templValue:user}',{templKey:pass}:'{templValue:pass}'}");
-            for (int j = 0; j < 100; j++)
+            var someSeparators = new SomeSeparators("{{templKey:user}:'{templValue:user}',{templKey:pass}:'{templValue:pass}'}");
+            var threaadList = new List<Thread>();
+            bool someThreadHasError = false;
+            for (int j = 0; j < 50; j++)
             {
-                new Thread(() =>
+                var thread = new Thread(() =>
                 {
-                    for (int i = 1; i < 1000000; i++)
+                    for (int i = 1; i < 10000 && !someThreadHasError; i++)
                     {
                         var rndStringUsr = Path.GetRandomFileName();
                         var rndStringPass = Path.GetRandomFileName();
-                        var cleanRes = noSpacesMode.CleanString("{user:'" + rndStringUsr + "',pass:'" + rndStringPass + "'}");
-                        Assert.AreEqual(cleanRes.CleanString,
-                            "{user:'" + new String(noSpacesMode.Replacement, rndStringUsr.Length) + "',pass:'" +
-                            new String(noSpacesMode.Replacement, rndStringPass.Length) + "'}");
-                        Assert.AreEqual(cleanRes.SecureData[0].Value, rndStringUsr);
-                        Assert.AreEqual(cleanRes.SecureData[1].Value, rndStringPass);
+                        var cleanRes = someSeparators.CleanString("{user:'" + rndStringUsr + "',pass:'" + rndStringPass + "'}");
+                        someThreadHasError = cleanRes.CleanString !=
+                            "{user:'" + new String(someSeparators.Replacement, rndStringUsr.Length) + "',pass:'" +
+                            new String(someSeparators.Replacement, rndStringPass.Length) + "'}" && !someThreadHasError;
+                        someThreadHasError = cleanRes.SecureData[0].Value != rndStringUsr && !someThreadHasError;
+                        someThreadHasError = cleanRes.SecureData[1].Value != rndStringPass && !someThreadHasError;
                     }
-                }).Start();
+                    lock (threaadList)
+                    {
+                        threaadList.Remove(Thread.CurrentThread);
+                    }
+                });
+                lock (threaadList)
+                {
+                    threaadList.Add(thread);
+                }
+                thread.Start();
             }
+            int threadCount = threaadList.Count;
+            while (threadCount != 0)
+            {
+                Thread.Sleep(100);
+                lock (threaadList)
+                {
+                    threadCount = threaadList.Count;
+                }
+            }
+            Assert.AreEqual(threadCount, 0);
+            Assert.AreEqual(someThreadHasError, false);
         }
 
         [TestMethod]

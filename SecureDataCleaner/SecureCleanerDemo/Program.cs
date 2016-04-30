@@ -25,6 +25,11 @@ namespace SecureCleanerDemo
     {
         static void Main(string[] args)
         {
+            VkHttpRequestCleaner vkCleaner = new VkHttpRequestCleaner();
+            VkHttpResult vkResult = new VkHttpResult();
+            vkCleaner.Clean(vkResult);
+
+
             HttpResultCleaner resCleaner = new HttpResultCleaner(new DefaultCleaner(
                 new NoSpaces("http://test.com?user={templValue:user}&pass={templValue:pass}"),
                 new NoSpaces("<auth><user>{templValue:user}</user><pass>{templValue:pass}</pass></auth>"),
